@@ -1,16 +1,38 @@
 package tdd.vendingMachine;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.ProductType;
 
 public class VendingMachineTest {
 
+    VendingMachine vendingMachine;
+
+    @Before
+    public void beforeMethod() {
+        vendingMachine = new VendingMachine();
+    }
+
+    @Test
+    public void vendingMachineShouldDisplaySelectedProductPrice() {
+        // given
+        ProductType testProductType = ProductType.MINERAL_WATER;
+        vendingMachine.addShelve(0, new VendingMachineShelve(testProductType));
+
+        // when
+        vendingMachine.selectShelve(0);
+
+        // then
+        String displayValue = vendingMachine.getMessageFromDisplay();
+        Assertions.assertThat(displayValue).isNotNull()
+            .isEqualTo(String.format("Product price: %s", testProductType.getPrice()));
+    }
+
     @Test
     public void vendingMachineShouldAcceptMoneyAndDisplayRemainingAmount() {
         // given
-        VendingMachine vendingMachine = new VendingMachine();
         vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR));
 
         // when
@@ -26,7 +48,6 @@ public class VendingMachineTest {
     @Test
     public void vendingMachineShouldDisplayErrorMessageWhenShelveDoesNotExist() {
         // given
-        VendingMachine vendingMachine = new VendingMachine();
         vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.COLA_DRINK));
 
         // when

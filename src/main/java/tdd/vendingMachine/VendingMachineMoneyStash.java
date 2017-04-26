@@ -17,4 +17,8 @@ public class VendingMachineMoneyStash {
     public BigDecimal getTotalAmount() {
         return money.stream().map(Denomination::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public boolean isEmpty() {
+        return money.isEmpty();
+    }
 }

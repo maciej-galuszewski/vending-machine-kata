@@ -2,6 +2,7 @@ package tdd.vendingMachine.model;
 
 public enum DisplayValue {
 
+    PRODUCT_PRICE("Product price: %s"),
     REMAINING_AMOUNT("Remaining amount: %s"),
     INVALID_SHELVE("Invalid shelve number");
 
