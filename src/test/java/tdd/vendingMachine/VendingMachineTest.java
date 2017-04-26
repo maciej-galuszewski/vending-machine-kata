@@ -25,9 +25,9 @@ public class VendingMachineTest {
         vendingMachine.selectShelve(0);
 
         // then
-        String displayValue = vendingMachine.getMessageFromDisplay();
-        Assertions.assertThat(displayValue).isNotNull()
+        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNotNull()
             .isEqualTo(String.format("Product price: %s", testProductType.getPrice()));
+        Assertions.assertThat(vendingMachine.getDroppedMoney()).isEmpty();
     }
 
     @Test
@@ -41,8 +41,8 @@ public class VendingMachineTest {
         vendingMachine.insertMoneyForTransaction(Denomination.TENTH);
 
         // then
-        String displayValue = vendingMachine.getMessageFromDisplay();
-        Assertions.assertThat(displayValue).isNotNull().isEqualTo("Remaining amount: 1.7");
+        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNotNull().isEqualTo("Remaining amount: 1.7");
+        Assertions.assertThat(vendingMachine.getDroppedMoney()).isEmpty();
     }
 
     @Test
@@ -54,7 +54,20 @@ public class VendingMachineTest {
         vendingMachine.selectShelve(1);
 
         // then
-        String displayValue = vendingMachine.getMessageFromDisplay();
-        Assertions.assertThat(displayValue).isNotNull().isEqualTo("Invalid shelve number");
+        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNotNull().isEqualTo("Invalid shelve number");
+        Assertions.assertThat(vendingMachine.getDroppedMoney()).isEmpty();
+    }
+
+    @Test
+    public void vendingMachineShouldNotAcceptMoneyWhenShelveIsNotSelected() {
+        // given
+        Denomination testDenomination = Denomination.FIVE;
+
+        // when
+        vendingMachine.insertMoneyForTransaction(testDenomination);
+
+        // then
+        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNull();
+        Assertions.assertThat(vendingMachine.getDroppedMoney()).isNotEmpty().containsExactly(testDenomination);
     }
 }

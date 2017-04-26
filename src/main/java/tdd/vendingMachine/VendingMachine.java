@@ -4,7 +4,9 @@ import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.DisplayValue;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VendingMachine {
@@ -15,12 +17,18 @@ public class VendingMachine {
 
     private final Map<Integer, VendingMachineShelve> shelves = new HashMap<>();
 
+    private final List<Denomination> droppedMoney = new ArrayList<>();
+
     private VendingMachineShelve selectedShelve = null;
 
     public void insertMoneyForTransaction(Denomination denomination) {
         transactionMoneyStash.insertMoney(denomination);
-        BigDecimal remainingAmount = selectedShelve.getProductPrice().subtract(transactionMoneyStash.getTotalAmount());
-        display.setDisplayValue(DisplayValue.REMAINING_AMOUNT, remainingAmount);
+        if (selectedShelve == null) {
+            dropMoneyFromTransactionStash();
+        } else {
+            BigDecimal remainingAmount = selectedShelve.getProductPrice().subtract(transactionMoneyStash.getTotalAmount());
+            display.setDisplayValue(DisplayValue.REMAINING_AMOUNT, remainingAmount);
+        }
     }
 
     public void selectShelve(int shelveNumber) {
@@ -40,5 +48,13 @@ public class VendingMachine {
 
     public String getMessageFromDisplay() {
         return display.getDisplayValue();
+    }
+
+    public List<Denomination> getDroppedMoney() {
+        return droppedMoney;
+    }
+
+    private void dropMoneyFromTransactionStash() {
+        droppedMoney.addAll(transactionMoneyStash.dropMoney());
     }
 }

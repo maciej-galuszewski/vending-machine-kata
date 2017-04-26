@@ -8,17 +8,23 @@ import java.util.List;
 
 public class VendingMachineMoneyStash {
 
-    private final List<Denomination> money = new ArrayList<>();
+    private final List<Denomination> storedMoney = new ArrayList<>();
 
     public void insertMoney(Denomination denomination) {
-        money.add(denomination);
+        storedMoney.add(denomination);
     }
 
     public BigDecimal getTotalAmount() {
-        return money.stream().map(Denomination::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return storedMoney.stream().map(Denomination::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public boolean isEmpty() {
-        return money.isEmpty();
+        return storedMoney.isEmpty();
+    }
+
+    public List<Denomination> dropMoney() {
+        List<Denomination> moneyToDrop = new ArrayList<>(storedMoney);
+        storedMoney.clear();
+        return moneyToDrop;
     }
 }
