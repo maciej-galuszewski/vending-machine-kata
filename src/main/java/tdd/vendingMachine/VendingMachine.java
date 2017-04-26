@@ -25,7 +25,11 @@ public class VendingMachine {
 
     public void selectShelve(int shelveNumber) {
         selectedShelve = shelves.get(shelveNumber);
-        display.setDisplayValue(DisplayValue.REMAINING_AMOUNT, selectedShelve.getProductPrice());
+        if (selectedShelve == null) {
+            display.setDisplayValue(DisplayValue.INVALID_SHELVE);
+        } else {
+            display.setDisplayValue(DisplayValue.REMAINING_AMOUNT, selectedShelve.getProductPrice());
+        }
     }
 
     public void addShelve(int shelveNumber, VendingMachineShelve shelve) {
