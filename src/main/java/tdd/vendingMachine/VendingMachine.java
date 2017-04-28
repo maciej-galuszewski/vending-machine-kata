@@ -42,6 +42,12 @@ public class VendingMachine {
         }
     }
 
+    public void pressCancelButton() {
+        selectedShelve = null;
+        dropMoneyFromTransactionStash();
+        display.setDisplayValue(null);
+    }
+
     public void addShelve(int shelveNumber, VendingMachineShelve shelve) {
         shelves.put(shelveNumber, shelve);
     }

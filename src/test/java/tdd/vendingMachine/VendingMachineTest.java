@@ -6,6 +6,9 @@ import org.junit.Test;
 import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.ProductType;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class VendingMachineTest {
 
     VendingMachine vendingMachine;
@@ -69,5 +72,21 @@ public class VendingMachineTest {
         // then
         Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNull();
         Assertions.assertThat(vendingMachine.getDroppedMoney()).isNotEmpty().containsExactly(testDenomination);
+    }
+
+    @Test
+    public void vendingMachineShouldReturnTransactionMoneyWhenInsufficientMoneyIsInsertedAndCancelButtonIsPressed() {
+        // given
+        List<Denomination> testDenominations = Arrays.asList(Denomination.ONE, Denomination.TENTH);
+        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.MINERAL_WATER));
+
+        // when
+        vendingMachine.selectShelve(0);
+        testDenominations.forEach(vendingMachine::insertMoneyForTransaction);
+        vendingMachine.pressCancelButton();
+
+        // then
+        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNull();
+        Assertions.assertThat(vendingMachine.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
     }
 }

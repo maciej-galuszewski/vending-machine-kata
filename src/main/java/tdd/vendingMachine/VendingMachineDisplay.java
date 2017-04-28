@@ -7,7 +7,11 @@ public class VendingMachineDisplay {
     private String displayValue = null;
 
     public void setDisplayValue(DisplayValue displayValue, Object... args) {
-        this.displayValue = String.format(displayValue.getValue(), args);
+        if (displayValue == null) {
+            this.displayValue = null;
+        } else {
+            this.displayValue = String.format(displayValue.getValue(), args);
+        }
     }
 
     public String getDisplayValue() {
