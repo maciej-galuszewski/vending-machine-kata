@@ -22,7 +22,7 @@ public class VendingMachineTest {
     public void vendingMachineShouldDisplaySelectedProductPrice() {
         // given
         ProductType testProductType = ProductType.MINERAL_WATER;
-        vendingMachine.addShelve(0, new VendingMachineShelve(testProductType));
+        vendingMachine.addShelve(0, new VendingMachineShelve(testProductType, 1));
 
         // when
         vendingMachine.selectShelve(0);
@@ -36,7 +36,7 @@ public class VendingMachineTest {
     @Test
     public void vendingMachineShouldAcceptMoneyAndDisplayRemainingAmount() {
         // given
-        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR));
+        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR, 1));
 
         // when
         vendingMachine.selectShelve(0);
@@ -51,7 +51,7 @@ public class VendingMachineTest {
     @Test
     public void vendingMachineShouldDisplayErrorMessageWhenShelveDoesNotExist() {
         // given
-        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.COLA_DRINK));
+        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.COLA_DRINK, 1));
 
         // when
         vendingMachine.selectShelve(1);
@@ -78,7 +78,7 @@ public class VendingMachineTest {
     public void vendingMachineShouldReturnTransactionMoneyWhenInsufficientMoneyIsInsertedAndCancelButtonIsPressed() {
         // given
         List<Denomination> testDenominations = Arrays.asList(Denomination.ONE, Denomination.TENTH);
-        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.MINERAL_WATER));
+        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.MINERAL_WATER, 1));
 
         // when
         vendingMachine.selectShelve(0);
@@ -88,5 +88,18 @@ public class VendingMachineTest {
         // then
         Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNull();
         Assertions.assertThat(vendingMachine.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
+    }
+
+    @Test
+    public void vendingMachineShouldDisplayErrorMessageAfterSelectingShelveWhenProductIsNotAvailable() {
+        // given
+        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR, 0));
+
+        // when
+        vendingMachine.selectShelve(0);
+
+        // then
+        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNotNull().isEqualTo("Product not available");
+        Assertions.assertThat(vendingMachine.getDroppedMoney()).isEmpty();
     }
 }

@@ -4,7 +4,8 @@ public enum DisplayValue {
 
     PRODUCT_PRICE("Product price: %s"),
     REMAINING_AMOUNT("Remaining amount: %s"),
-    INVALID_SHELVE("Invalid shelve number");
+    INVALID_SHELVE("Invalid shelve number"),
+    PRODUCT_NOT_AVAILABLE("Product not available");
 
     private String value;
 

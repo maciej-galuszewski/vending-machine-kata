@@ -35,6 +35,8 @@ public class VendingMachine {
         selectedShelve = shelves.get(shelveNumber);
         if (selectedShelve == null) {
             display.setDisplayValue(DisplayValue.INVALID_SHELVE);
+        } else if (selectedShelve.isEmpty()) {
+            display.setDisplayValue(DisplayValue.PRODUCT_NOT_AVAILABLE);
         } else if (transactionMoneyStash.isEmpty()) {
             display.setDisplayValue(DisplayValue.PRODUCT_PRICE, selectedShelve.getProductPrice());
         } else {
