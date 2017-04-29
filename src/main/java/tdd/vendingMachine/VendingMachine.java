@@ -4,65 +4,53 @@ import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.DisplayValue;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class VendingMachine {
 
     private final VendingMachineMoneyStash transactionMoneyStash = new VendingMachineMoneyStash();
 
-    private final VendingMachineDisplay display = new VendingMachineDisplay();
-
     private final Map<Integer, VendingMachineShelve> shelves = new HashMap<>();
 
-    private final List<Denomination> droppedMoney = new ArrayList<>();
+    private final VendingMachineOutput output = new VendingMachineOutput();
 
     private VendingMachineShelve selectedShelve = null;
 
     public void insertMoneyForTransaction(Denomination denomination) {
         transactionMoneyStash.insertMoney(denomination);
         if (selectedShelve == null) {
-            dropMoneyFromTransactionStash();
+            output.dropMoney(transactionMoneyStash.dropMoney());
         } else {
             BigDecimal remainingAmount = selectedShelve.getProductPrice().subtract(transactionMoneyStash.getTotalAmount());
-            display.setDisplayValue(DisplayValue.REMAINING_AMOUNT, remainingAmount);
+            output.setDisplayMessage(DisplayValue.REMAINING_AMOUNT, remainingAmount);
         }
     }
 
     public void selectShelve(int shelveNumber) {
         selectedShelve = shelves.get(shelveNumber);
         if (selectedShelve == null) {
-            display.setDisplayValue(DisplayValue.INVALID_SHELVE);
+            output.setDisplayMessage(DisplayValue.INVALID_SHELVE);
         } else if (selectedShelve.isEmpty()) {
-            display.setDisplayValue(DisplayValue.PRODUCT_NOT_AVAILABLE);
+            output.setDisplayMessage(DisplayValue.PRODUCT_NOT_AVAILABLE);
         } else if (transactionMoneyStash.isEmpty()) {
-            display.setDisplayValue(DisplayValue.PRODUCT_PRICE, selectedShelve.getProductPrice());
+            output.setDisplayMessage(DisplayValue.PRODUCT_PRICE, selectedShelve.getProductPrice());
         } else {
-            display.setDisplayValue(DisplayValue.REMAINING_AMOUNT, selectedShelve.getProductPrice());
+            output.setDisplayMessage(DisplayValue.REMAINING_AMOUNT, selectedShelve.getProductPrice());
         }
     }
 
     public void pressCancelButton() {
         selectedShelve = null;
-        dropMoneyFromTransactionStash();
-        display.setDisplayValue(null);
+        output.dropMoney(transactionMoneyStash.dropMoney());
+        output.setDisplayMessage(null);
     }
 
     public void addShelve(int shelveNumber, VendingMachineShelve shelve) {
         shelves.put(shelveNumber, shelve);
     }
 
-    public String getMessageFromDisplay() {
-        return display.getDisplayValue();
-    }
-
-    public List<Denomination> getDroppedMoney() {
-        return droppedMoney;
-    }
-
-    private void dropMoneyFromTransactionStash() {
-        droppedMoney.addAll(transactionMoneyStash.dropMoney());
+    public VendingMachineOutput getOutput() {
+        return output;
     }
 }
