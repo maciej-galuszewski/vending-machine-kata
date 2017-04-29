@@ -11,54 +11,54 @@ import java.util.List;
 
 public class VendingMachineTest {
 
-    VendingMachine vendingMachine;
+    private VendingMachine sut;
 
     @Before
     public void beforeMethod() {
-        vendingMachine = new VendingMachine();
+        sut = new VendingMachine();
     }
 
     @Test
     public void vendingMachineShouldDisplaySelectedProductPrice() {
         // given
         ProductType testProductType = ProductType.MINERAL_WATER;
-        vendingMachine.addShelve(0, new VendingMachineShelve(testProductType, 1));
+        sut.addShelve(0, new VendingMachineShelve(testProductType, 1));
 
         // when
-        vendingMachine.selectShelve(0);
+        sut.selectShelve(0);
 
         // then
-        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNotNull()
+        Assertions.assertThat(sut.getMessageFromDisplay()).isNotNull()
             .isEqualTo(String.format("Product price: %s", testProductType.getPrice()));
-        Assertions.assertThat(vendingMachine.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(sut.getDroppedMoney()).isEmpty();
     }
 
     @Test
     public void vendingMachineShouldAcceptMoneyAndDisplayRemainingAmount() {
         // given
-        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR, 1));
+        sut.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR, 1));
 
         // when
-        vendingMachine.selectShelve(0);
-        vendingMachine.insertMoneyForTransaction(Denomination.TWO_TENTHS);
-        vendingMachine.insertMoneyForTransaction(Denomination.TENTH);
+        sut.selectShelve(0);
+        sut.insertMoneyForTransaction(Denomination.TWO_TENTHS);
+        sut.insertMoneyForTransaction(Denomination.TENTH);
 
         // then
-        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNotNull().isEqualTo("Remaining amount: 1.7");
-        Assertions.assertThat(vendingMachine.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(sut.getMessageFromDisplay()).isNotNull().isEqualTo("Remaining amount: 1.7");
+        Assertions.assertThat(sut.getDroppedMoney()).isEmpty();
     }
 
     @Test
     public void vendingMachineShouldDisplayErrorMessageWhenShelveDoesNotExist() {
         // given
-        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.COLA_DRINK, 1));
+        sut.addShelve(0, new VendingMachineShelve(ProductType.COLA_DRINK, 1));
 
         // when
-        vendingMachine.selectShelve(1);
+        sut.selectShelve(1);
 
         // then
-        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNotNull().isEqualTo("Invalid shelve number");
-        Assertions.assertThat(vendingMachine.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(sut.getMessageFromDisplay()).isNotNull().isEqualTo("Invalid shelve number");
+        Assertions.assertThat(sut.getDroppedMoney()).isEmpty();
     }
 
     @Test
@@ -67,39 +67,39 @@ public class VendingMachineTest {
         Denomination testDenomination = Denomination.FIVE;
 
         // when
-        vendingMachine.insertMoneyForTransaction(testDenomination);
+        sut.insertMoneyForTransaction(testDenomination);
 
         // then
-        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNull();
-        Assertions.assertThat(vendingMachine.getDroppedMoney()).isNotEmpty().containsExactly(testDenomination);
+        Assertions.assertThat(sut.getMessageFromDisplay()).isNull();
+        Assertions.assertThat(sut.getDroppedMoney()).isNotEmpty().containsExactly(testDenomination);
     }
 
     @Test
     public void vendingMachineShouldReturnTransactionMoneyWhenInsufficientMoneyIsInsertedAndCancelButtonIsPressed() {
         // given
         List<Denomination> testDenominations = Arrays.asList(Denomination.ONE, Denomination.TENTH);
-        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.MINERAL_WATER, 1));
+        sut.addShelve(0, new VendingMachineShelve(ProductType.MINERAL_WATER, 1));
 
         // when
-        vendingMachine.selectShelve(0);
-        testDenominations.forEach(vendingMachine::insertMoneyForTransaction);
-        vendingMachine.pressCancelButton();
+        sut.selectShelve(0);
+        testDenominations.forEach(sut::insertMoneyForTransaction);
+        sut.pressCancelButton();
 
         // then
-        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNull();
-        Assertions.assertThat(vendingMachine.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
+        Assertions.assertThat(sut.getMessageFromDisplay()).isNull();
+        Assertions.assertThat(sut.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
     }
 
     @Test
     public void vendingMachineShouldDisplayErrorMessageAfterSelectingShelveWhenProductIsNotAvailable() {
         // given
-        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR, 0));
+        sut.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR, 0));
 
         // when
-        vendingMachine.selectShelve(0);
+        sut.selectShelve(0);
 
         // then
-        Assertions.assertThat(vendingMachine.getMessageFromDisplay()).isNotNull().isEqualTo("Product not available");
-        Assertions.assertThat(vendingMachine.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(sut.getMessageFromDisplay()).isNotNull().isEqualTo("Product not available");
+        Assertions.assertThat(sut.getDroppedMoney()).isEmpty();
     }
 }

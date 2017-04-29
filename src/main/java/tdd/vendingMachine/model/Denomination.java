@@ -1,6 +1,7 @@
 package tdd.vendingMachine.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public enum Denomination {
 
@@ -14,5 +15,9 @@ public enum Denomination {
 
     public BigDecimal getAmount() {
         return amount;
+    }
+
+    public static BigDecimal getTotalAmount(List<Denomination> denominationList) {
+        return denominationList.stream().map(Denomination::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
