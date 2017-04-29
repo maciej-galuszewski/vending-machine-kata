@@ -25,4 +25,8 @@ public class VendingMachineShelve {
     public boolean isEmpty() {
         return products.isEmpty();
     }
+
+    public Product dropProduct() {
+        return products.pop();
+    }
 }

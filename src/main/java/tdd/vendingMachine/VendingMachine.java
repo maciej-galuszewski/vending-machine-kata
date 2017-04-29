@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class VendingMachine {
 
+    private final VendingMachineMoneyStash storedMoneyStash = new VendingMachineMoneyStash();
+
     private final VendingMachineMoneyStash transactionMoneyStash = new VendingMachineMoneyStash();
 
     private final Map<Integer, VendingMachineShelve> shelves = new HashMap<>();
@@ -23,7 +25,11 @@ public class VendingMachine {
             output.dropMoney(transactionMoneyStash.dropMoney());
         } else {
             BigDecimal remainingAmount = selectedShelve.getProductPrice().subtract(transactionMoneyStash.getTotalAmount());
-            output.setDisplayMessage(DisplayValue.REMAINING_AMOUNT, remainingAmount);
+            if (BigDecimal.ZERO.compareTo(remainingAmount) == 0) {
+                finalizeTransaction();
+            } else {
+                output.setDisplayMessage(DisplayValue.REMAINING_AMOUNT, remainingAmount);
+            }
         }
     }
 
@@ -52,5 +58,12 @@ public class VendingMachine {
 
     public VendingMachineOutput getOutput() {
         return output;
+    }
+
+    private void finalizeTransaction() {
+        output.setDisplayMessage(null);
+        output.dropProduct(selectedShelve.dropProduct());
+        transactionMoneyStash.dropMoney().forEach(storedMoneyStash::insertMoney);
+        selectedShelve = null;
     }
 }

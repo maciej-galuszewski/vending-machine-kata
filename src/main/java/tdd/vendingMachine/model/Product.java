@@ -7,4 +7,8 @@ public class Product {
     public Product(ProductType productType) {
         this.productType = productType;
     }
+
+    public ProductType getProductType() {
+        return productType;
+    }
 }

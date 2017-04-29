@@ -31,6 +31,7 @@ public class VendingMachineTest {
         VendingMachineOutput output = sut.getOutput();
         Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo(String.format("Product price: %s", testProductType.getPrice()));
         Assertions.assertThat(output.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -47,6 +48,7 @@ public class VendingMachineTest {
         VendingMachineOutput output = sut.getOutput();
         Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Remaining amount: 1.7");
         Assertions.assertThat(output.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -61,6 +63,7 @@ public class VendingMachineTest {
         VendingMachineOutput output = sut.getOutput();
         Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Invalid shelve number");
         Assertions.assertThat(output.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -75,6 +78,7 @@ public class VendingMachineTest {
         VendingMachineOutput output = sut.getOutput();
         Assertions.assertThat(output.getDisplayMessage()).isNull();
         Assertions.assertThat(output.getDroppedMoney()).isNotEmpty().containsExactly(testDenomination);
+        Assertions.assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -92,6 +96,7 @@ public class VendingMachineTest {
         VendingMachineOutput output = sut.getOutput();
         Assertions.assertThat(output.getDisplayMessage()).isNull();
         Assertions.assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
+        Assertions.assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -106,5 +111,30 @@ public class VendingMachineTest {
         VendingMachineOutput output = sut.getOutput();
         Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Product not available");
         Assertions.assertThat(output.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(output.getDroppedProduct()).isNull();
+    }
+
+    @Test
+    public void vendingMachineShouldDropProductAndNotReturnChangeWhenExactAmountIsInserted() {
+        // given
+        ProductType testProductType = ProductType.MINERAL_WATER;
+        List<Denomination> testDenominations = Arrays.asList(
+            Denomination.ONE,
+            Denomination.HALF,
+            Denomination.TWO_TENTHS,
+            Denomination.TENTH
+        );
+        sut.addShelve(0, new VendingMachineShelve(testProductType, 1));
+
+        // when
+        sut.selectShelve(0);
+        testDenominations.forEach(sut::insertMoneyForTransaction);
+
+        // then
+        VendingMachineOutput output = sut.getOutput();
+        Assertions.assertThat(output.getDisplayMessage()).isNull();
+        Assertions.assertThat(output.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(output.getDroppedProduct()).isNotNull();
+        Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(testProductType);
     }
 }

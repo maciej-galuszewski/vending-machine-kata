@@ -2,6 +2,7 @@ package tdd.vendingMachine;
 
 import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.DisplayValue;
+import tdd.vendingMachine.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,17 @@ public class VendingMachineOutput {
 
     private final List<Denomination> droppedMoney = new ArrayList<>();
 
+    private Product droppedProduct = null;
+
     private String displayMessage = null;
+
+    public void dropMoney(List<Denomination> moneyToDrop) {
+        droppedMoney.addAll(moneyToDrop);
+    }
+
+    public void dropProduct(Product product) {
+        this.droppedProduct = product;
+    }
 
     public void setDisplayMessage(DisplayValue displayMessage, Object... args) {
         if (displayMessage == null) {
@@ -24,11 +35,11 @@ public class VendingMachineOutput {
         return droppedMoney;
     }
 
-    public String getDisplayMessage() {
-        return displayMessage;
+    public Product getDroppedProduct() {
+        return droppedProduct;
     }
 
-    public void dropMoney(List<Denomination> moneyToDrop) {
-        droppedMoney.addAll(moneyToDrop);
+    public String getDisplayMessage() {
+        return displayMessage;
     }
 }
