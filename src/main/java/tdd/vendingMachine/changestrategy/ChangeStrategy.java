@@ -4,7 +4,6 @@ import tdd.vendingMachine.model.Denomination;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class ChangeStrategy {
 
         List<List<Denomination>> results = new ArrayList<>();
         for (int i = 0; i < availableDenominations.size(); i++) {
-            calculateChangeRecursively(results, availableDenominations, Arrays.asList(availableDenominations.get(i)), i, amountToReturn);
+            calculateChangeRecursively(results, availableDenominations, new ArrayList<>(), i, amountToReturn);
         }
         return results.stream().min(Comparator.comparingInt(List::size)).orElse(null);
     }
@@ -38,6 +37,7 @@ public class ChangeStrategy {
             return;
         }
         for (int i = startIndex + 1; i < availableDenominations.size(); i++) {
+            denominationsSubTree = new ArrayList<>(denominationsSubTree);
             calculateChangeRecursively(results, availableDenominations, denominationsSubTree, i, subtractResult);
         }
     }
