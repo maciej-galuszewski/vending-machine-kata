@@ -31,6 +31,12 @@ public class VendingMachineOutput {
         }
     }
 
+    public void clearOutput() {
+        droppedMoney.clear();
+        droppedProduct = null;
+        displayMessage = null;
+    }
+
     public List<Denomination> getDroppedMoney() {
         return droppedMoney;
     }

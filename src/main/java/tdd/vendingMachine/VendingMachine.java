@@ -41,6 +41,10 @@ public class VendingMachine {
         }
     }
 
+    public void insertStoredMoney(Denomination denomination) {
+        storedMoneyStash.insertMoney(denomination);
+    }
+
     public void selectShelve(int shelveNumber) {
         selectedShelve = shelves.get(shelveNumber);
         if (selectedShelve == null) {

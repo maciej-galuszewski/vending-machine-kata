@@ -150,6 +150,31 @@ public class VendingMachineTest {
     }
 
     @Test
+    public void vendingMachineShouldDecrementAvailableProductsWhenProductHasBeenDropped() {
+        // given
+        ProductType testProductType = ProductType.MINERAL_WATER;
+        List<Denomination> testDenominations = Arrays.asList(
+            Denomination.ONE,
+            Denomination.HALF,
+            Denomination.TWO_TENTHS,
+            Denomination.TENTH
+        );
+        sut.addShelve(0, new VendingMachineShelve(testProductType, 1));
+
+        // when
+        sut.selectShelve(0);
+        testDenominations.forEach(sut::insertMoneyForTransaction);
+        sut.getOutput().clearOutput();
+        sut.selectShelve(0);
+
+        // then
+        VendingMachineOutput output = sut.getOutput();
+        Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Product not available");
+        Assertions.assertThat(output.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(output.getDroppedProduct()).isNull();
+    }
+
+    @Test
     public void vendingMachineShouldDropProductAndReturnChangeWhenGreaterAmountIsInserted() {
         // given
         ProductType testProductType = ProductType.MINERAL_WATER;
