@@ -22,9 +22,18 @@ public class VendingMachineMoneyStash {
         return storedMoney.isEmpty();
     }
 
-    public List<Denomination> dropMoney() {
+    public List<Denomination> dropAllStoredMoney() {
         List<Denomination> moneyToDrop = new ArrayList<>(storedMoney);
         storedMoney.clear();
         return moneyToDrop;
+    }
+
+    public List<Denomination> dropMoney(List<Denomination> moneyToDrop) {
+        storedMoney.removeAll(moneyToDrop);
+        return moneyToDrop;
+    }
+
+    public List<Denomination> getStoredMoney() {
+        return storedMoney;
     }
 }

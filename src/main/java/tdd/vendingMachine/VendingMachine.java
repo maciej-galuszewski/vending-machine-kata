@@ -1,10 +1,12 @@
 package tdd.vendingMachine;
 
+import tdd.vendingMachine.changestrategy.ChangeStrategy;
 import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.DisplayValue;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VendingMachine {
@@ -17,16 +19,22 @@ public class VendingMachine {
 
     private final VendingMachineOutput output = new VendingMachineOutput();
 
+    private final ChangeStrategy changeStrategy;
+
     private VendingMachineShelve selectedShelve = null;
+
+    public VendingMachine(ChangeStrategy changeStrategy) {
+        this.changeStrategy = changeStrategy;
+    }
 
     public void insertMoneyForTransaction(Denomination denomination) {
         transactionMoneyStash.insertMoney(denomination);
         if (selectedShelve == null) {
-            output.dropMoney(transactionMoneyStash.dropMoney());
+            output.dropMoney(transactionMoneyStash.dropAllStoredMoney());
         } else {
             BigDecimal remainingAmount = selectedShelve.getProductPrice().subtract(transactionMoneyStash.getTotalAmount());
-            if (BigDecimal.ZERO.compareTo(remainingAmount) == 0) {
-                finalizeTransaction();
+            if (remainingAmount.compareTo(BigDecimal.ZERO) <= 0) {
+                finalizeTransaction(remainingAmount);
             } else {
                 output.setDisplayMessage(DisplayValue.REMAINING_AMOUNT, remainingAmount);
             }
@@ -48,7 +56,7 @@ public class VendingMachine {
 
     public void pressCancelButton() {
         selectedShelve = null;
-        output.dropMoney(transactionMoneyStash.dropMoney());
+        output.dropMoney(transactionMoneyStash.dropAllStoredMoney());
         output.setDisplayMessage(null);
     }
 
@@ -60,10 +68,14 @@ public class VendingMachine {
         return output;
     }
 
-    private void finalizeTransaction() {
+    private void finalizeTransaction(BigDecimal remainingAmount) {
         output.setDisplayMessage(null);
         output.dropProduct(selectedShelve.dropProduct());
-        transactionMoneyStash.dropMoney().forEach(storedMoneyStash::insertMoney);
+        transactionMoneyStash.dropAllStoredMoney().forEach(storedMoneyStash::insertMoney);
+        if (remainingAmount.compareTo(BigDecimal.ZERO) < 0) {
+            List<Denomination> change = changeStrategy.calculateChange(storedMoneyStash.getStoredMoney(), remainingAmount.negate());
+            output.dropMoney(storedMoneyStash.dropMoney(change));
+        }
         selectedShelve = null;
     }
 }

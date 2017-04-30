@@ -3,19 +3,29 @@ package tdd.vendingMachine;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+import tdd.vendingMachine.changestrategy.ChangeStrategy;
 import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.ProductType;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+@RunWith(MockitoJUnitRunner.class)
 public class VendingMachineTest {
 
     private VendingMachine sut;
 
+    @Mock
+    private ChangeStrategy changeStrategy;
+
     @Before
     public void beforeMethod() {
-        sut = new VendingMachine();
+        sut = new VendingMachine(changeStrategy);
     }
 
     @Test
@@ -134,6 +144,28 @@ public class VendingMachineTest {
         VendingMachineOutput output = sut.getOutput();
         Assertions.assertThat(output.getDisplayMessage()).isNull();
         Assertions.assertThat(output.getDroppedMoney()).isEmpty();
+        Assertions.assertThat(output.getDroppedProduct()).isNotNull();
+        Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(testProductType);
+        Mockito.verify(changeStrategy, Mockito.never()).calculateChange(Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    public void vendingMachineShouldDropProductAndReturnChangeWhenGreaterAmountIsInserted() {
+        // given
+        ProductType testProductType = ProductType.MINERAL_WATER;
+        sut.addShelve(0, new VendingMachineShelve(testProductType, 1));
+
+        List<Denomination> change = Collections.singletonList(Denomination.TWO_TENTHS);
+        Mockito.when(changeStrategy.calculateChange(Mockito.any(), Mockito.any())).thenReturn(change);
+
+        // when
+        sut.selectShelve(0);
+        sut.insertMoneyForTransaction(Denomination.TWO);
+
+        // then
+        VendingMachineOutput output = sut.getOutput();
+        Assertions.assertThat(output.getDisplayMessage()).isNull();
+        Assertions.assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(change);
         Assertions.assertThat(output.getDroppedProduct()).isNotNull();
         Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(testProductType);
     }
