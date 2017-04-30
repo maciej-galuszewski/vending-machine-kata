@@ -169,4 +169,29 @@ public class VendingMachineTest {
         Assertions.assertThat(output.getDroppedProduct()).isNotNull();
         Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(testProductType);
     }
+
+    @Test
+    public void vendingMachineShouldAbortTransactionWhenNoChangeIsAvailable() {
+        // given
+        ProductType testProductType = ProductType.MINERAL_WATER;
+        List<Denomination> testDenominations = Arrays.asList(
+            Denomination.ONE,
+            Denomination.HALF,
+            Denomination.TWO_TENTHS,
+            Denomination.TWO_TENTHS
+        );
+        sut.addShelve(0, new VendingMachineShelve(testProductType, 1));
+
+        Mockito.when(changeStrategy.calculateChange(Mockito.any(), Mockito.any())).thenReturn(null);
+
+        // when
+        sut.selectShelve(0);
+        testDenominations.forEach(sut::insertMoneyForTransaction);
+
+        // then
+        VendingMachineOutput output = sut.getOutput();
+        Assertions.assertThat(output.getDisplayMessage()).isEqualTo("Change not available");
+        Assertions.assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
+        Assertions.assertThat(output.getDroppedProduct()).isNull();
+    }
 }

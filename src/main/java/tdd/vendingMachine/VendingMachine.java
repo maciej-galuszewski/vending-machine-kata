@@ -69,12 +69,23 @@ public class VendingMachine {
     }
 
     private void finalizeTransaction(BigDecimal remainingAmount) {
-        output.setDisplayMessage(null);
-        output.dropProduct(selectedShelve.dropProduct());
-        transactionMoneyStash.dropAllStoredMoney().forEach(storedMoneyStash::insertMoney);
+        boolean transactionSuccessful = false;
         if (remainingAmount.compareTo(BigDecimal.ZERO) < 0) {
             List<Denomination> change = changeStrategy.calculateChange(storedMoneyStash.getStoredMoney(), remainingAmount.negate());
-            output.dropMoney(storedMoneyStash.dropMoney(change));
+            if (change != null) {
+                output.dropMoney(storedMoneyStash.dropMoney(change));
+                transactionSuccessful = true;
+            } else {
+                output.setDisplayMessage(DisplayValue.CHANGE_NOT_AVAILABLE);
+                output.dropMoney(transactionMoneyStash.dropAllStoredMoney());
+            }
+        } else {
+            transactionSuccessful = true;
+        }
+        if (transactionSuccessful) {
+            output.setDisplayMessage(null);
+            output.dropProduct(selectedShelve.dropProduct());
+            transactionMoneyStash.dropAllStoredMoney().forEach(storedMoneyStash::insertMoney);
         }
         selectedShelve = null;
     }
