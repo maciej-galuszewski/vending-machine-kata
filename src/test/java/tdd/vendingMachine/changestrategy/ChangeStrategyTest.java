@@ -19,14 +19,30 @@ public class ChangeStrategyTest {
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-            {Collections.singletonList(Denomination.FIVE), new BigDecimal("5"), Collections.singletonList(Denomination.FIVE)},
-            {Collections.singletonList(Denomination.TWO), new BigDecimal("5"), null},
-            {Arrays.asList(Denomination.FIVE, Denomination.TENTH), new BigDecimal("5.1"), Arrays.asList(Denomination.FIVE, Denomination.TENTH)},
-            {Arrays.asList(Denomination.FIVE, Denomination.TENTH), new BigDecimal("5.2"), null},
-            {Arrays.asList(Denomination.FIVE, Denomination.FIVE), new BigDecimal("10"), Arrays.asList(Denomination.FIVE, Denomination.FIVE)},
-            {Arrays.asList(Denomination.FIVE, Denomination.TWO, Denomination.ONE, Denomination.TWO), new BigDecimal("10"), Arrays.asList(Denomination.FIVE, Denomination.TWO, Denomination.TWO, Denomination.ONE)},
-            {Arrays.asList(Denomination.FIVE, Denomination.TWO, Denomination.TWO, Denomination.TWO), new BigDecimal("10"), null},
-            {Arrays.asList(Denomination.FIVE, Denomination.ONE, Denomination.ONE, Denomination.ONE, Denomination.TWO, Denomination.ONE), new BigDecimal("8"), Arrays.asList(Denomination.FIVE, Denomination.TWO, Denomination.ONE)}
+            {Collections.singletonList(Denomination.FIVE),
+                new BigDecimal("5"),
+                Collections.singletonList(Denomination.FIVE)},
+            {Collections.singletonList(Denomination.TWO),
+                new BigDecimal("5"),
+                null},
+            {Arrays.asList(Denomination.FIVE, Denomination.TENTH),
+                new BigDecimal("5.1"),
+                Arrays.asList(Denomination.FIVE, Denomination.TENTH)},
+            {Arrays.asList(Denomination.FIVE, Denomination.TENTH),
+                new BigDecimal("5.2"),
+                null},
+            {Arrays.asList(Denomination.FIVE, Denomination.FIVE),
+                new BigDecimal("10"),
+                Arrays.asList(Denomination.FIVE, Denomination.FIVE)},
+            {Arrays.asList(Denomination.FIVE, Denomination.TWO, Denomination.ONE, Denomination.TWO),
+                new BigDecimal("10"),
+                Arrays.asList(Denomination.FIVE, Denomination.TWO, Denomination.TWO, Denomination.ONE)},
+            {Arrays.asList(Denomination.FIVE, Denomination.TWO, Denomination.TWO, Denomination.TWO),
+                new BigDecimal("10"),
+                null},
+            {Arrays.asList(Denomination.FIVE, Denomination.ONE, Denomination.ONE, Denomination.ONE, Denomination.TWO, Denomination.ONE),
+                new BigDecimal("8"),
+                Arrays.asList(Denomination.FIVE, Denomination.TWO, Denomination.ONE)}
         });
     }
 
