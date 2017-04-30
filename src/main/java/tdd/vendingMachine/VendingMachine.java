@@ -5,6 +5,7 @@ import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.DisplayValue;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,9 @@ public class VendingMachine {
     private void finalizeTransaction(BigDecimal remainingAmount) {
         boolean transactionSuccessful = false;
         if (remainingAmount.compareTo(BigDecimal.ZERO) < 0) {
-            List<Denomination> change = changeStrategy.calculateChange(storedMoneyStash.getStoredMoney(), remainingAmount.negate());
+            List<Denomination> availableDenominations = new ArrayList<>(storedMoneyStash.getStoredMoney());
+            availableDenominations.addAll(transactionMoneyStash.getStoredMoney());
+            List<Denomination> change = changeStrategy.calculateChange(availableDenominations, remainingAmount.negate());
             if (change != null) {
                 output.dropMoney(storedMoneyStash.dropMoney(change));
                 transactionSuccessful = true;

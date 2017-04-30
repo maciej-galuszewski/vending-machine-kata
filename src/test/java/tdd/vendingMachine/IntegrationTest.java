@@ -81,4 +81,22 @@ public class IntegrationTest {
         Assertions.assertThat(output.getDisplayMessage()).isNull();
         Assertions.assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(Denomination.HALF));
     }
+
+    @Test
+    public void vendingMachineShouldUseTransactionMoneyForReturningChange() {
+        // given
+        vendingMachine.addShelve(0, new VendingMachineShelve(ProductType.CHOCOLATE_BAR, 1));
+
+        // when
+        vendingMachine.selectShelve(0);
+        vendingMachine.insertMoneyForTransaction(Denomination.ONE);
+        vendingMachine.insertMoneyForTransaction(Denomination.TWO);
+
+        // then
+        VendingMachineOutput output = vendingMachine.getOutput();
+        Assertions.assertThat(output.getDroppedProduct()).isNotNull();
+        Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(ProductType.CHOCOLATE_BAR);
+        Assertions.assertThat(output.getDisplayMessage()).isNull();
+        Assertions.assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(Denomination.ONE));
+    }
 }
