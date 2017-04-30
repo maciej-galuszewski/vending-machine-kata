@@ -1,6 +1,6 @@
 package tdd.vendingMachine.model;
 
-public enum DisplayValue {
+public enum DisplayMessage {
 
     PRODUCT_PRICE("Product price: %s"),
     REMAINING_AMOUNT("Remaining amount: %s"),
@@ -10,7 +10,7 @@ public enum DisplayValue {
 
     private String value;
 
-    DisplayValue(String value) {
+    DisplayMessage(String value) {
         this.value = value;
     }
 

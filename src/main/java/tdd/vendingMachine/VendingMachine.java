@@ -2,7 +2,7 @@ package tdd.vendingMachine;
 
 import tdd.vendingMachine.changestrategy.ChangeStrategy;
 import tdd.vendingMachine.model.Denomination;
-import tdd.vendingMachine.model.DisplayValue;
+import tdd.vendingMachine.model.DisplayMessage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,14 +32,11 @@ public class VendingMachine {
         transactionMoneyStash.insertMoney(denomination);
         if (selectedShelve == null) {
             output.dropMoney(transactionMoneyStash.dropAllStoredMoney());
-        } else {
-            BigDecimal remainingAmount = selectedShelve.getProductPrice().subtract(transactionMoneyStash.getTotalAmount());
-            if (remainingAmount.compareTo(BigDecimal.ZERO) <= 0) {
-                finalizeTransaction(remainingAmount);
-            } else {
-                output.setDisplayMessage(DisplayValue.REMAINING_AMOUNT, remainingAmount);
-            }
+            return;
         }
+
+        BigDecimal remainingAmount = selectedShelve.getProductPrice().subtract(transactionMoneyStash.getTotalAmount());
+        parseTransactionStatus(remainingAmount);
     }
 
     public void insertStoredMoney(Denomination denomination) {
@@ -49,20 +46,24 @@ public class VendingMachine {
     public void selectShelve(int shelveNumber) {
         selectedShelve = shelves.get(shelveNumber);
         if (selectedShelve == null) {
-            output.setDisplayMessage(DisplayValue.INVALID_SHELVE);
+            output.setDisplayMessage(DisplayMessage.INVALID_SHELVE);
         } else if (selectedShelve.isEmpty()) {
-            output.setDisplayMessage(DisplayValue.PRODUCT_NOT_AVAILABLE);
+            output.setDisplayMessage(DisplayMessage.PRODUCT_NOT_AVAILABLE);
         } else if (transactionMoneyStash.isEmpty()) {
-            output.setDisplayMessage(DisplayValue.PRODUCT_PRICE, selectedShelve.getProductPrice());
+            output.setDisplayMessage(DisplayMessage.PRODUCT_PRICE, selectedShelve.getProductPrice());
         } else {
-            output.setDisplayMessage(DisplayValue.REMAINING_AMOUNT, selectedShelve.getProductPrice());
+            output.setDisplayMessage(DisplayMessage.REMAINING_AMOUNT, selectedShelve.getProductPrice());
         }
     }
 
     public void pressCancelButton() {
+        cancelTransaction(null);
+    }
+
+    private void cancelTransaction(DisplayMessage displayMessage) {
         selectedShelve = null;
         output.dropMoney(transactionMoneyStash.dropAllStoredMoney());
-        output.setDisplayMessage(null);
+        output.setDisplayMessage(displayMessage);
     }
 
     public void addShelve(int shelveNumber, VendingMachineShelve shelve) {
@@ -73,27 +74,34 @@ public class VendingMachine {
         return output;
     }
 
-    private void finalizeTransaction(BigDecimal remainingAmount) {
-        boolean transactionSuccessful = false;
-        if (remainingAmount.compareTo(BigDecimal.ZERO) < 0) {
-            List<Denomination> availableDenominations = new ArrayList<>(storedMoneyStash.getStoredMoney());
-            availableDenominations.addAll(transactionMoneyStash.getStoredMoney());
-            List<Denomination> change = changeStrategy.calculateChange(availableDenominations, remainingAmount.negate());
-            if (change != null) {
-                output.dropMoney(storedMoneyStash.dropMoney(change));
-                transactionSuccessful = true;
-            } else {
-                output.setDisplayMessage(DisplayValue.CHANGE_NOT_AVAILABLE);
-                output.dropMoney(transactionMoneyStash.dropAllStoredMoney());
-            }
-        } else {
-            transactionSuccessful = true;
+    private void parseTransactionStatus(BigDecimal remainingAmount) {
+        int comparisonResult = remainingAmount.compareTo(BigDecimal.ZERO);
+        if (comparisonResult > 0) {
+            output.setDisplayMessage(DisplayMessage.REMAINING_AMOUNT, remainingAmount);
+            return;
         }
-        if (transactionSuccessful) {
-            output.setDisplayMessage(null);
-            output.dropProduct(selectedShelve.dropProduct());
-            transactionMoneyStash.dropAllStoredMoney().forEach(storedMoneyStash::insertMoney);
+
+        List<Denomination> change = null;
+        if (comparisonResult < 0) {
+            change = calculateChange(remainingAmount.negate());
+            if (change == null) {
+                cancelTransaction(DisplayMessage.CHANGE_NOT_AVAILABLE);
+                return;
+            }
+        }
+
+        transactionMoneyStash.dropAllStoredMoney().forEach(storedMoneyStash::insertMoney);
+        output.setDisplayMessage(null);
+        output.dropProduct(selectedShelve.dropProduct());
+        if (comparisonResult < 0) {
+            output.dropMoney(storedMoneyStash.dropMoney(change));
         }
         selectedShelve = null;
+    }
+
+    private List<Denomination> calculateChange(BigDecimal changeToReturn) {
+        List<Denomination> availableDenominations = new ArrayList<>(storedMoneyStash.getStoredMoney());
+        availableDenominations.addAll(transactionMoneyStash.getStoredMoney());
+        return changeStrategy.calculateChange(availableDenominations, changeToReturn);
     }
 }

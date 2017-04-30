@@ -29,8 +29,10 @@ public class VendingMachineMoneyStash {
     }
 
     public List<Denomination> dropMoney(List<Denomination> moneyToDrop) {
-        storedMoney.removeAll(moneyToDrop);
-        return moneyToDrop;
+        List<Denomination> commonDenominations = new ArrayList<>(storedMoney);
+        commonDenominations.retainAll(moneyToDrop);
+        storedMoney.removeAll(commonDenominations);
+        return commonDenominations;
     }
 
     public List<Denomination> getStoredMoney() {

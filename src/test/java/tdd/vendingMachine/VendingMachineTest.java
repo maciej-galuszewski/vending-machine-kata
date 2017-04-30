@@ -180,7 +180,10 @@ public class VendingMachineTest {
         ProductType testProductType = ProductType.MINERAL_WATER;
         sut.addShelve(0, new VendingMachineShelve(testProductType, 1));
 
-        List<Denomination> change = Collections.singletonList(Denomination.TWO_TENTHS);
+        Denomination changeDenomination = Denomination.TWO_TENTHS;
+        sut.insertStoredMoney(changeDenomination);
+
+        List<Denomination> change = Collections.singletonList(changeDenomination);
         Mockito.when(changeStrategy.calculateChange(Mockito.any(), Mockito.any())).thenReturn(change);
 
         // when

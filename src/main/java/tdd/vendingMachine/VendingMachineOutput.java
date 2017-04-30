@@ -1,7 +1,7 @@
 package tdd.vendingMachine;
 
 import tdd.vendingMachine.model.Denomination;
-import tdd.vendingMachine.model.DisplayValue;
+import tdd.vendingMachine.model.DisplayMessage;
 import tdd.vendingMachine.model.Product;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class VendingMachineOutput {
         this.droppedProduct = product;
     }
 
-    public void setDisplayMessage(DisplayValue displayMessage, Object... args) {
+    public void setDisplayMessage(DisplayMessage displayMessage, Object... args) {
         if (displayMessage == null) {
             this.displayMessage = null;
         } else {
