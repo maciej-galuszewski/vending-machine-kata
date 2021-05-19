@@ -1,4 +1,4 @@
-The purpose of this maven-based project is to simulate vending machine ( https://en.wikipedia.org/wiki/Vending_machine ).
+The purpose of this maven-based project is to simulate vending machine (https://en.wikipedia.org/wiki/Vending_machine).
 
 The project was written using test-driven development and does not contain any interface to interact with vending machine such as UI or command line.
 The only way to check if vending machine works is by writing tests.
