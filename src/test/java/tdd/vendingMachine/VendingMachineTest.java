@@ -1,12 +1,10 @@
 package tdd.vendingMachine;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import tdd.vendingMachine.changestrategy.ChangeStrategy;
 import tdd.vendingMachine.model.Denomination;
 import tdd.vendingMachine.model.ProductType;
@@ -14,6 +12,9 @@ import tdd.vendingMachine.model.ProductType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VendingMachineTest {
@@ -39,9 +40,9 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo(String.format("Product price: %s", testProductType.getPrice()));
-        Assertions.assertThat(output.getDroppedMoney()).isEmpty();
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isNotNull().isEqualTo(String.format("Product price: %s", testProductType.getPrice()));
+        assertThat(output.getDroppedMoney()).isEmpty();
+        assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -56,9 +57,9 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Remaining amount: 1.7");
-        Assertions.assertThat(output.getDroppedMoney()).isEmpty();
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Remaining amount: 1.7");
+        assertThat(output.getDroppedMoney()).isEmpty();
+        assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -71,9 +72,9 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Invalid shelve number");
-        Assertions.assertThat(output.getDroppedMoney()).isEmpty();
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Invalid shelve number");
+        assertThat(output.getDroppedMoney()).isEmpty();
+        assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -86,9 +87,9 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNull();
-        Assertions.assertThat(output.getDroppedMoney()).isNotEmpty().containsExactly(testDenomination);
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isNull();
+        assertThat(output.getDroppedMoney()).isNotEmpty().containsExactly(testDenomination);
+        assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -104,9 +105,9 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNull();
-        Assertions.assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isNull();
+        assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
+        assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -119,9 +120,9 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Product not available");
-        Assertions.assertThat(output.getDroppedMoney()).isEmpty();
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Product not available");
+        assertThat(output.getDroppedMoney()).isEmpty();
+        assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -142,11 +143,11 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNull();
-        Assertions.assertThat(output.getDroppedMoney()).isEmpty();
-        Assertions.assertThat(output.getDroppedProduct()).isNotNull();
-        Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(testProductType);
-        Mockito.verify(changeStrategy, Mockito.never()).calculateChange(Mockito.any(), Mockito.any());
+        assertThat(output.getDisplayMessage()).isNull();
+        assertThat(output.getDroppedMoney()).isEmpty();
+        assertThat(output.getDroppedProduct()).isNotNull();
+        assertThat(output.getDroppedProduct().getProductType()).isEqualTo(testProductType);
+        verify(changeStrategy, never()).calculateChange(any(), any());
     }
 
     @Test
@@ -169,9 +170,9 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Product not available");
-        Assertions.assertThat(output.getDroppedMoney()).isEmpty();
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Product not available");
+        assertThat(output.getDroppedMoney()).isEmpty();
+        assertThat(output.getDroppedProduct()).isNull();
     }
 
     @Test
@@ -184,7 +185,7 @@ public class VendingMachineTest {
         sut.insertStoredMoney(changeDenomination);
 
         List<Denomination> change = Collections.singletonList(changeDenomination);
-        Mockito.when(changeStrategy.calculateChange(Mockito.any(), Mockito.any())).thenReturn(change);
+        when(changeStrategy.calculateChange(any(), any())).thenReturn(change);
 
         // when
         sut.selectShelve(0);
@@ -192,10 +193,10 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isNull();
-        Assertions.assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(change);
-        Assertions.assertThat(output.getDroppedProduct()).isNotNull();
-        Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(testProductType);
+        assertThat(output.getDisplayMessage()).isNull();
+        assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(change);
+        assertThat(output.getDroppedProduct()).isNotNull();
+        assertThat(output.getDroppedProduct().getProductType()).isEqualTo(testProductType);
     }
 
     @Test
@@ -210,7 +211,7 @@ public class VendingMachineTest {
         );
         sut.addShelve(0, new VendingMachineShelve(testProductType, 1));
 
-        Mockito.when(changeStrategy.calculateChange(Mockito.any(), Mockito.any())).thenReturn(null);
+        when(changeStrategy.calculateChange(any(), any())).thenReturn(null);
 
         // when
         sut.selectShelve(0);
@@ -218,8 +219,8 @@ public class VendingMachineTest {
 
         // then
         VendingMachineOutput output = sut.getOutput();
-        Assertions.assertThat(output.getDisplayMessage()).isEqualTo("Change not available");
-        Assertions.assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isEqualTo("Change not available");
+        assertThat(output.getDroppedMoney()).isNotEmpty().isEqualTo(testDenominations);
+        assertThat(output.getDroppedProduct()).isNull();
     }
 }

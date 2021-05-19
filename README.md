@@ -1,40 +1,9 @@
-vending-machine-kata
-====================
+The purpose of this maven-based project is to simulate vending machine ( https://en.wikipedia.org/wiki/Vending_machine ).
 
-This is a simple exercise vending-machine-kata - in which you will simulate the...
-vending machine ( https://en.wikipedia.org/wiki/Vending_machine )
-
-The project is maven based. We are providing maven wrapper so if do not have maven installed call `./mvnw` (or `mvnw.cmd` on Windows) to 
-build it.
-On opening you will find two classes: 
-`VendingMachine` and `VendingMachineTest`.
-The second one contains one test, which you can easily remove, since it is not part of the assignment.
-You can also rename or even remove provided classes.
-Below you will find requirements, key aspects and most importantly assignment itself.
-
-You are more than welcome to tell us (either in email or in the README) what you would do differently, if you had more time.
-
+The project was written using test-driven development and does not contain any interface to interact with vending machine such as UI or command line.
+The only way to check if vending machine works is by writing tests.
 
 Requirements
----------
-
-* Please solve the exercise using Java language. We prefer Java 7 or 8.
-* We are providing Maven configuration, but if you want to switch to Gradle feel free to change that.
-If you want to use different build tool, then provide a way to execute build **with tests**.
-Take into account simplicity of provided solution, we would like to spent more time analyzing your code then configuring build environment.
-* Please send us solution as pull request on GitHub or link to your repository which we can clone.
-
-Key aspects
-----------------
-
-* we would like to see how you are using Test-Driven Development
-* we will check your skills in object and domain design (Object-Oriented Programming, Domain-Driven Design)
-* we will check craftsmanship of production and test code (Clean Code)
-* we will check if the algorithm is correct
-* we will check usage of design patterns (we will be also interested in why you chose them)
-* we will check your commits for atomicity and readability
-
-The assignment
 ------------
 
 1. Vending machine contains products.
@@ -49,4 +18,4 @@ The assignment
 10. After selecting a shelve and inserting enough money we will get the product and the change (but machine has to have money to be able to return the change).
 11. After selecting a shelve and inserting insufficient money to buy a product, user has to press "Cancel" to get their money back.
 12. If machine does not have enough money to give the change it must show a warning message and return the money user has put, and it should not give the product.
-13. Machine can return change using only money that was put into it (or by someone at start or by people who bought goods). Machine cannot create it's own money!
+13. Machine can return change using only money that was put into it (or by someone at start or by people who bought goods). Machine cannot create its own money!

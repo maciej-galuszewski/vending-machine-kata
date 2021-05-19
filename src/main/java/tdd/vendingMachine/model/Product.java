@@ -1,14 +1,9 @@
 package tdd.vendingMachine.model;
 
+import lombok.Data;
+
+@Data
 public class Product {
 
     private final ProductType productType;
-
-    public Product(ProductType productType) {
-        this.productType = productType;
-    }
-
-    public ProductType getProductType() {
-        return productType;
-    }
 }
