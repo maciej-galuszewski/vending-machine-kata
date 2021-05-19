@@ -8,7 +8,7 @@ public enum DisplayMessage {
     PRODUCT_NOT_AVAILABLE("Product not available"),
     CHANGE_NOT_AVAILABLE("Change not available");
 
-    private String value;
+    private final String value;
 
     DisplayMessage(String value) {
         this.value = value;

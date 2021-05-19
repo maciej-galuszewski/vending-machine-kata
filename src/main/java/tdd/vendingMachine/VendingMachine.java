@@ -13,15 +13,10 @@ import java.util.Map;
 public class VendingMachine {
 
     private final VendingMachineMoneyStash storedMoneyStash = new VendingMachineMoneyStash();
-
     private final VendingMachineMoneyStash transactionMoneyStash = new VendingMachineMoneyStash();
-
     private final Map<Integer, VendingMachineShelve> shelves = new HashMap<>();
-
     private final VendingMachineOutput output = new VendingMachineOutput();
-
     private final ChangeStrategy changeStrategy;
-
     private VendingMachineShelve selectedShelve = null;
 
     public VendingMachine(ChangeStrategy changeStrategy) {

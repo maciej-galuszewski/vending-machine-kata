@@ -10,7 +10,6 @@ import java.util.stream.IntStream;
 public class VendingMachineShelve {
 
     private final ProductType productType;
-
     private final LinkedList<Product> products = new LinkedList<>();
 
     public VendingMachineShelve(ProductType productType, int numberOfProducts) {

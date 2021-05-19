@@ -4,21 +4,14 @@ import java.math.BigDecimal;
 
 public enum ProductType {
 
-    COLA_DRINK("Cola drink 0.25l", "1.5"),
-    CHOCOLATE_BAR("Chocolate bar", "2.0"),
-    MINERAL_WATER("Mineral water 0.33l", "1.8");
+    COLA_DRINK("1.5"),
+    CHOCOLATE_BAR("2.0"),
+    MINERAL_WATER("1.8");
 
-    private String name;
+    private final BigDecimal price;
 
-    private BigDecimal price;
-
-    ProductType(String name, String price) {
-        this.name = name;
+    ProductType(String price) {
         this.price = new BigDecimal(price);
-    }
-
-    public String getName() {
-        return name;
     }
 
     public BigDecimal getPrice() {

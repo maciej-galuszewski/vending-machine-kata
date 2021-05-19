@@ -10,9 +10,7 @@ import java.util.List;
 public class VendingMachineOutput {
 
     private final List<Denomination> droppedMoney = new ArrayList<>();
-
     private Product droppedProduct = null;
-
     private String displayMessage = null;
 
     public void dropMoney(List<Denomination> moneyToDrop) {

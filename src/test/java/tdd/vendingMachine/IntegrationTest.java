@@ -1,6 +1,5 @@
 package tdd.vendingMachine;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import tdd.vendingMachine.changestrategy.ChangeStrategy;
@@ -10,6 +9,8 @@ import tdd.vendingMachine.model.ProductType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationTest {
 
@@ -32,10 +33,10 @@ public class IntegrationTest {
 
         // then
         VendingMachineOutput output = vendingMachine.getOutput();
-        Assertions.assertThat(output.getDroppedProduct()).isNotNull();
-        Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(ProductType.MINERAL_WATER);
-        Assertions.assertThat(output.getDisplayMessage()).isNull();
-        Assertions.assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(Denomination.TWO_TENTHS));
+        assertThat(output.getDroppedProduct()).isNotNull();
+        assertThat(output.getDroppedProduct().getProductType()).isEqualTo(ProductType.MINERAL_WATER);
+        assertThat(output.getDisplayMessage()).isNull();
+        assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(Denomination.TWO_TENTHS));
     }
 
     @Test
@@ -50,9 +51,9 @@ public class IntegrationTest {
 
         // then
         VendingMachineOutput output = vendingMachine.getOutput();
-        Assertions.assertThat(output.getDroppedProduct()).isNull();
-        Assertions.assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Change not available");
-        Assertions.assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(testDenomination));
+        assertThat(output.getDroppedProduct()).isNull();
+        assertThat(output.getDisplayMessage()).isNotNull().isEqualTo("Change not available");
+        assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(testDenomination));
     }
 
     @Test
@@ -76,10 +77,10 @@ public class IntegrationTest {
 
         // then
         VendingMachineOutput output = vendingMachine.getOutput();
-        Assertions.assertThat(output.getDroppedProduct()).isNotNull();
-        Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(ProductType.COLA_DRINK);
-        Assertions.assertThat(output.getDisplayMessage()).isNull();
-        Assertions.assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(Denomination.HALF));
+        assertThat(output.getDroppedProduct()).isNotNull();
+        assertThat(output.getDroppedProduct().getProductType()).isEqualTo(ProductType.COLA_DRINK);
+        assertThat(output.getDisplayMessage()).isNull();
+        assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(Denomination.HALF));
     }
 
     @Test
@@ -94,9 +95,9 @@ public class IntegrationTest {
 
         // then
         VendingMachineOutput output = vendingMachine.getOutput();
-        Assertions.assertThat(output.getDroppedProduct()).isNotNull();
-        Assertions.assertThat(output.getDroppedProduct().getProductType()).isEqualTo(ProductType.CHOCOLATE_BAR);
-        Assertions.assertThat(output.getDisplayMessage()).isNull();
-        Assertions.assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(Denomination.ONE));
+        assertThat(output.getDroppedProduct()).isNotNull();
+        assertThat(output.getDroppedProduct().getProductType()).isEqualTo(ProductType.CHOCOLATE_BAR);
+        assertThat(output.getDisplayMessage()).isNull();
+        assertThat(output.getDroppedMoney()).isEqualTo(Collections.singletonList(Denomination.ONE));
     }
 }
